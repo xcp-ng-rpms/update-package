@@ -1,7 +1,7 @@
 Name:    update-package
 Summary: Build host update packages
 Version: 2.0.0
-Release: 1
+Release: 1.1%{?dist}
 License: BSD
 Source0: https://code.citrite.net/rest/archive/latest/projects/XS/repos/%{name}/archive?at=v%{version}&format=tar.gz&prefix=%{name}-%{version}#/%{name}.tar.gz
 BuildArch: noarch
@@ -54,7 +54,9 @@ Performs signing operations requested by the update signing server.
 %autosetup -p1
 
 %build
-sed -e "s/use_scm_version=True/version='%{version}'/" setup.py >setup.no_scm.py
+sed -e "s/use_scm_version=True/version='%{version}'/" \
+    -e "/setuptools_scm/ d" \
+    setup.py >setup.no_scm.py
 %{__python2} setup.no_scm.py build
 
 %install
@@ -157,6 +159,9 @@ sed -e "s/use_scm_version=True/version='%{version}'/" setup.py >setup.no_scm.py
 %{python_sitelib}/update_package-*.egg-info
 
 %changelog
+* Wed Oct 18 2023 Yann Dirson <yann.dirson@vates.fr> - 2.0.0-1.1
+- Fix disabling of setuptools_scm
+
 * Fri Aug 31 2018 Simon Rowe <simon.rowe@citrix.com> - 2.0.0-1
 - CA-293995: Ensure xmllint call is quoted
 - Remove slipstreaming tools
