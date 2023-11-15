@@ -1,0 +1,40 @@
+diff -ru update-package-2.0.0.orig/update_package/common.py update-package-2.0.0/update_package/common.py
+--- update-package-2.0.0.orig/update_package/common.py	2018-07-19 11:16:34.000000000 +0200
++++ update-package-2.0.0/update_package/common.py	2023-11-15 14:34:13.079000000 +0100
+@@ -312,7 +312,7 @@
+     Generate repository metadata and sign it
+     """
+     root_dir = os.path.join(work_dir, 'root')
+-    cmd = ['createrepo']
++    cmd = ['createrepo_c']
+     if pkgdir:
+         xglobs = [os.path.basename(xdir) + '/*' for xdir in
+                   glob.glob(root_dir + '/*') if os.path.basename(xdir) !=
+diff -ru update-package-2.0.0.orig/update_package/update.mk update-package-2.0.0/update_package/update.mk
+--- update-package-2.0.0.orig/update_package/update.mk	2018-07-19 11:16:34.000000000 +0200
++++ update-package-2.0.0/update_package/update.mk	2023-11-15 14:34:13.079000000 +0100
+@@ -235,21 +235,21 @@
+ $(BINPKGS_ISO): $(BINARY_PACKAGE_PATHS)
+ 	$(call mkdir_empty,$(BINPKGS_ISO_DIR)/Packages)
+ 	[ ! -s $(BINARY_PACKAGE_PATHS) ] || cp -p $$(<$(BINARY_PACKAGE_PATHS)) $(BINPKGS_ISO_DIR)/Packages
+-	cd $(BINPKGS_ISO_DIR); createrepo .
++	cd $(BINPKGS_ISO_DIR); createrepo_c .
+ 	$(GENISOIMAGE) -V "$(BINPKGS_VOLID)" -o $@ $(BINPKGS_ISO_DIR)
+ 
+ $(SRC_ISO): $(SOURCE_PACKAGES_PATHS)
+ 	@mkdir -p $(@D)
+ 	$(call mkdir_empty,$(SOURCE_ISO_DIR)/SPackages)
+ 	[ ! -s $(SOURCE_PACKAGES_PATHS) ] || cp -p $$(<$(SOURCE_PACKAGES_PATHS)) $(SOURCE_ISO_DIR)/SPackages
+-	cd $(SOURCE_ISO_DIR); createrepo .
++	cd $(SOURCE_ISO_DIR); createrepo_c .
+ 	$(GENISOIMAGE) -V "$(SOURCE_VOLID)" -o $@ $(SOURCE_ISO_DIR)
+ 
+ $(FULL_SRC_ISO): $(FULL_SOURCE_PACKAGES_PATHS)
+ 	@mkdir -p $(@D)
+ 	$(call mkdir_empty,$(FULL_SOURCE_ISO_DIR)/SPackages)
+ 	[ ! -s $(FULL_SOURCE_PACKAGES_PATHS) ] || cp -p $$(<$(FULL_SOURCE_PACKAGES_PATHS)) $(FULL_SOURCE_ISO_DIR)/SPackages
+-	cd $(FULL_SOURCE_ISO_DIR); createrepo .
++	cd $(FULL_SOURCE_ISO_DIR); createrepo_c .
+ 	$(GENISOIMAGE) -V "$(FULL_SOURCE_VOLID)" -o $@ $(FULL_SOURCE_ISO_DIR)
+ 
+ $(PUBKEY): $(SIGN_KEYFILE)

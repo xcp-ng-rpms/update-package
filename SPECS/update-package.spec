@@ -1,16 +1,17 @@
 Name:    update-package
 Summary: Build host update packages
 Version: 2.0.0
-Release: 1.1%{?dist}
+Release: 1.2%{?dist}
 License: BSD
 Source0: https://code.citrite.net/rest/archive/latest/projects/XS/repos/%{name}/archive?at=v%{version}&format=tar.gz&prefix=%{name}-%{version}#/%{name}.tar.gz
+Patch0: createrepo_c.patch
 BuildArch: noarch
 
 BuildRequires: python2-devel
 BuildRequires: python-setuptools
 BuildRequires: systemd-units
 
-Requires: createrepo expect genisoimage gnupg2 python-libarchive-c python-setuptools rpm rpm-build rpm-sign syslinux
+Requires: createrepo_c expect genisoimage gnupg2 python-libarchive-c python-setuptools rpm rpm-build rpm-sign syslinux
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
@@ -37,7 +38,7 @@ Requests the signing server to sign releases and updates
 %package sign-server
 Summary: Signing server for updates
 
-Requires: createrepo expect genisoimage gnupg2 python-libarchive-c python-setuptools rpm rpm-build rpm-sign syslinux
+Requires: createrepo_c expect genisoimage gnupg2 python-libarchive-c python-setuptools rpm rpm-build rpm-sign syslinux
 
 %description sign-server
 Signs media and updates with release keys.
@@ -159,6 +160,9 @@ sed -e "s/use_scm_version=True/version='%{version}'/" \
 %{python_sitelib}/update_package-*.egg-info
 
 %changelog
+* Wed Nov 15 2023 Yann Dirson <yann.dirson@vates.fr> - 2.0.0-1.2
+- Use createrepo_c not createrepo
+
 * Wed Oct 18 2023 Yann Dirson <yann.dirson@vates.fr> - 2.0.0-1.1
 - Fix disabling of setuptools_scm
 
